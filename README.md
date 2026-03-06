@@ -1,2 +1,16 @@
-# home-cloud
+# [Home Cloud](https://github.com/bytepull/home-cloud)
 A bunch of services to install on a private cloud using Docker
+
+## Service
+
+- [**Portainer**](https://github.com/portainer/portainer) : a lightweight service delivery platform for containerized applications that can be used to manage Docker, Swarm, Kubernetes and ACI environments.
+
+- [**Home Assistant**](https://www.home-assistant.io/) : Home Assistant is an open-source home automation platform that enables centralized control of smart home devices from various brands, emphasizing local control and privacy.
+
+- [**Pi-Hole**](https://github.com/pi-hole/pi-hole) : Pi-hole is a network-wide ad blocker that acts as a DNS sinkhole, blocking ads and trackers at the network level. It enhances privacy, speeds up browsing, and requires no client-side software. 
+
+- [**Jellyfin**](https://github.com/jellyfin/jellyfin) : Jellyfin is a free, open-source media server that organizes and streams movies, TV, music, and photos to any device. It offers full privacy, no subscriptions, and supports real-time syncing, live TV, and broad client compatibility across platforms.
+
+- [**Navidrome**](https://github.com/navidrome/navidrome) : Navidrome is a lightweight, open-source music server that streams personal collections via web browsers or Subsonic-compatible apps. It supports multi-user access, real-time library updates, transcoding, scrobbling, and runs efficiently on devices like Raspberry Pi.
+
+- [**Wireguard**](https://www.wireguard.com/) : WireGuard is a modern, lightweight VPN protocol using state-of-the-art cryptography like ChaCha20 and Curve25519. It offers fast speeds, minimal code, strong security, and seamless connections across devices.

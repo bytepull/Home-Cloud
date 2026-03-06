@@ -1,0 +1,28 @@
+# More info at https://jellyfin.org/docs/general/administration/docker/
+services:
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    user: 1000:1000 # Optional - specify the uid and gid you would like Jellyfin to use instead of root
+    ports:
+      - 8096:8096/tcp
+      - 7359:7359/udp
+    volumes:
+      - ${JELLYFIN_DIR_PATH}/config:/config
+      - ${JELLYFIN_DIR_PATH}/cache:/cache
+      - type: bind
+        source: ${JELLYFIN_MEDIA_1_DIR_PATH:-./jellyfin/media1}
+        target: /media
+      # - type: bind
+      #   source: ${JELLYFIN_MEDIA_2_DIR_PATH:-./jellyfin/media2}
+      #   target: /media2
+      #   read_only: true
+      # - type: bind # Optional - extra fonts to be used during transcoding with subtitle burn-in
+      #   source: jellyfin/fonts
+      #   target: /usr/local/share/fonts/custom
+      #   read_only: true
+    restart: 'unless-stopped'
+    environment: # Optional - alternative address used for autodiscovery
+      - JELLYFIN_PublishedServerUrl=http://example.com
+    extra_hosts: # Optional - may be necessary for docker healthcheck to pass if running in host network mode
+      - 'host.docker.internal:host-gateway'

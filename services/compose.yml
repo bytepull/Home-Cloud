@@ -1,0 +1,6 @@
+include: 
+  - homeassistant.yml
+  - jellyfin.yml
+  - pihole.yml
+  - portainer.yml
+  - navidrome.yml
