@@ -8,13 +8,13 @@ services:
       - 8096:8096/tcp
       - 7359:7359/udp
     volumes:
-      - ${JELLYFIN_DIR_PATH:-../volumes/jellyfin}/config:/config
-      - ${JELLYFIN_DIR_PATH:-../volumes/jellyfin}/cache:/cache
+      - ${JELLYFIN_DIR_PATH}/config:/config
+      - ${JELLYFIN_DIR_PATH}/cache:/cache
       - type: bind
         source: ${JELLYFIN_MEDIA_1_DIR_PATH}
         target: /media
       # - type: bind
-      #   source: ${JELLYFIN_MEDIA_2_DIR_PATH:-./jellyfin/media2}
+      #   source: ${JELLYFIN_MEDIA_2_DIR_PATH}
       #   target: /media2
       #   read_only: true
       # - type: bind # Optional - extra fonts to be used during transcoding with subtitle burn-in

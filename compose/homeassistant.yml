@@ -4,11 +4,11 @@ services:
     container_name: homeassistant
     image: "ghcr.io/home-assistant/home-assistant:stable"
     volumes:
-      - ${HOMEASSISTANT_DIR_PATH:-../volumes/homeassistant}/config:/config
+      - ${HOMEASSISTANT_DIR_PATH}/config:/config
       - /etc/localtime:/etc/localtime:ro
       - /run/dbus:/run/dbus:ro
     restart: unless-stopped
     privileged: true
     network_mode: host
     environment:
-      TZ: ${TIMEZONE:-Europe/Rome}
+      TZ: ${TIMEZONE}

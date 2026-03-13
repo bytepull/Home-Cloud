@@ -19,7 +19,7 @@ services:
       - PERSISTENTKEEPALIVE_PEERS= #optional
       - LOG_CONFS=true #optional
     volumes:
-      - ${WIREGUARD_DIR_PATH:-../volumes/wireguard}/config:/config
+      - ${WIREGUARD_DIR_PATH}/config:/config
       - /lib/modules:/lib/modules #optional
     ports:
       - 51820:51820/udp
