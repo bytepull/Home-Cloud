@@ -5,6 +5,4 @@ include:
   - portainer.yml
   - navidrome.yml
   - wireguard.yml
-  - source: https://github.com/FreshRSS/FreshRSS.git
-    target: ./freshrss
-    file: docker-compose.yml # https://github.com/FreshRSS/FreshRSS/blob/edge/Docker/freshrss/docker-compose.yml
+  - freshrss.yml

@@ -16,3 +16,4 @@ A bunch of services to install on a private cloud using Docker
 - [**Wireguard**](https://github.com/linuxserver/docker-wireguard) : WireGuard is a modern, lightweight VPN protocol using state-of-the-art cryptography like ChaCha20 and Curve25519. It offers fast speeds, minimal code, strong security, and seamless connections across devices.
 
 - [**FreshRSS**](https://github.com/FreshRSS/FreshRSS) : FreshRSS is a self-hosted RSS feed aggregator.
+
