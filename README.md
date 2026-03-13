@@ -13,4 +13,6 @@ A bunch of services to install on a private cloud using Docker
 
 - [**Navidrome**](https://github.com/navidrome/navidrome) : Navidrome is a lightweight, open-source music server that streams personal collections via web browsers or Subsonic-compatible apps. It supports multi-user access, real-time library updates, transcoding, scrobbling, and runs efficiently on devices like Raspberry Pi.
 
-- [**Wireguard**](https://www.wireguard.com/) : WireGuard is a modern, lightweight VPN protocol using state-of-the-art cryptography like ChaCha20 and Curve25519. It offers fast speeds, minimal code, strong security, and seamless connections across devices.
+- [**Wireguard**](https://github.com/linuxserver/docker-wireguard) : WireGuard is a modern, lightweight VPN protocol using state-of-the-art cryptography like ChaCha20 and Curve25519. It offers fast speeds, minimal code, strong security, and seamless connections across devices.
+
+- [**FreshRSS**](https://github.com/FreshRSS/FreshRSS) : FreshRSS is a self-hosted RSS feed aggregator.
