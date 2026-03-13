@@ -10,5 +10,5 @@ services:
       # Optional: put your config options customization here. Examples:
       # ND_LOGLEVEL: debug
     volumes:
-      - ${NAVIDROME_DIR_PATH:-./navidrome}/data:/data
-      - ${NAVIDROME_MUSIC_DIR_PATH:-./navidrome/music}/:/music:ro
+      - ${NAVIDROME_DIR_PATH:-../volumes/navidrome}/data:/data
+      - ${NAVIDROME_MUSIC_DIR_PATH:-../volumes/navidrome/music}/:/music:ro
