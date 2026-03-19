@@ -1,8 +1,10 @@
 include: 
   - homeassistant.yml
+  - matter-server.yml
   - jellyfin.yml
   - pihole.yml
   - portainer.yml
   - navidrome.yml
   - wireguard.yml
   - freshrss.yml
+  - glances.yml
