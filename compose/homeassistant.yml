@@ -12,3 +12,6 @@ services:
     network_mode: host
     environment:
       TZ: ${TIMEZONE}
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
