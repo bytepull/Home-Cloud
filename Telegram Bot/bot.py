@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 
 import requests
-from telegram import Update
+from telegram import Update, BotCommand
 from telegram.ext import Application, CommandHandler, ContextTypes
 
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
@@ -14,6 +14,7 @@ LOG_FILE = Path(os.getenv("LOG_FILE", "data/bot.log"))
 CHECK_INTERVAL = int(os.getenv("CHECK_INTERVAL", "300"))
 IP_SERVICE_URL = os.getenv("IP_SERVICE_URL", "https://api.ipify.org?format=json")
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+DELETE_AFTER_SECONDS = int(os.getenv("DELETE_AFTER_SECONDS", "60"))
 
 LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
 
@@ -90,9 +91,30 @@ def is_allowed_user(user_id: int | None, allowed_users: set[int]) -> bool:
     return user_id is not None and user_id in allowed_users
 
 
-async def deny(update: Update) -> None:
-    if update.message:
-        await update.message.reply_text("Non autorizzato.")
+# async def auto_delete(context: ContextTypes.DEFAULT_TYPE, chat_id: int, message_id: int) -> None:
+#     await context.bot.delete_message(chat_id=chat_id, message_id=message_id)
+async def auto_delete(context: ContextTypes.DEFAULT_TYPE):
+    """Background job to delete the message."""
+    data = context.job.data
+    chat_id = data["chat_id"]
+    message_id = data["message_id"]
+    try:
+        await context.bot.delete_message(chat_id=chat_id, message_id=message_id)
+    except Exception as e:
+        print(f"Failed to delete message {message_id}: {e}")
+
+
+async def send_reply_and_delete(update: Update, context: ContextTypes.DEFAULT_TYPE, text: str) -> None:
+    msg = await update.message.reply_text(text)
+    context.job_queue.run_once(
+        auto_delete,
+        when=DELETE_AFTER_SECONDS,
+        data={"chat_id": msg.chat_id, "message_id": msg.message_id},
+    )
+
+
+async def deny(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await send_reply_and_delete(update, context, "Non autorizzato.")
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -100,7 +122,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.effective_user.id if update.effective_user else None
 
     if not is_allowed_user(user_id, allowed_users):
-        await deny(update)
+        await deny(update, context)
         return
 
     chat = update.effective_chat
@@ -115,9 +137,14 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         logger.exception("Failed on /start")
         ip = f"errore: {e}"
 
-    await update.message.reply_text(
-        f"Bot attivo.\nChat ID salvato: {chat.id if chat else 'n/d'}\nIP corrente: {ip}\nUsa /status."
+    text = (
+        f"Bot attivo.\n"
+        f"Chat ID salvato: {chat.id if chat else 'n/d'}\n"
+        f"IP corrente: {ip}\n"
+        f"Usa /status.\n"
+        f"Comandi disponibili: /start, /status, /reload_users"
     )
+    await send_reply_and_delete(update, context, text)
 
 
 async def status(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -125,7 +152,7 @@ async def status(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.effective_user.id if update.effective_user else None
 
     if not is_allowed_user(user_id, allowed_users):
-        await deny(update)
+        await deny(update, context)
         return
 
     chat = update.effective_chat
@@ -135,10 +162,10 @@ async def status(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     try:
         ip = get_public_ip()
         write_last_ip(ip)
-        await update.message.reply_text(f"IP pubblico corrente: {ip}")
+        await send_reply_and_delete(update, context, f"IP pubblico corrente: {ip}")
     except Exception as e:
         logger.exception("Failed on /status")
-        await update.message.reply_text(f"Errore nel recupero dell'IP: {e}")
+        await send_reply_and_delete(update, context, f"Errore nel recupero dell'IP: {e}")
 
 
 async def reload_users(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -146,13 +173,13 @@ async def reload_users(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     user_id = update.effective_user.id if update.effective_user else None
 
     if not is_allowed_user(user_id, allowed_users):
-        await deny(update)
+        await deny(update, context)
         return
 
     new_users = load_allowed_users(USERS_FILE)
     context.application.bot_data["allowed_users"] = new_users
-    await update.message.reply_text(f"Whitelist ricaricata. Utenti autorizzati: {len(new_users)}")
     logger.info("Whitelist reloaded: %d users", len(new_users))
+    await send_reply_and_delete(update, context, f"Whitelist ricaricata. Utenti autorizzati: {len(new_users)}")
 
 
 async def monitor_ip(context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -188,6 +215,12 @@ async def post_init(app: Application) -> None:
 
     app.bot_data["allowed_users"] = allowed_users
     logger.info("Loaded %d allowed users", len(allowed_users))
+
+    await app.bot.set_my_commands([
+        BotCommand("start", "Avvia il bot"),
+        BotCommand("status", "Mostra l'IP pubblico corrente"),
+        BotCommand("reload_users", "Ricarica la whitelist utenti"),
+    ])
 
     try:
         initial_ip = get_public_ip()
