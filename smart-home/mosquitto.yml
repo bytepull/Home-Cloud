@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ${MOSQUITO_DIR_PATH:-./volumes/mosquitto}/config:/mosquitto/config
+      - ${MOSQUITO_DIR_PATH:-./volumes/mosquitto}/data:/mosquitto/data
+      - ${MOSQUITO_DIR_PATH:-./volumes/mosquitto}/log:/mosquitto/log

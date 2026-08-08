@@ -3,9 +3,13 @@ services:
   homeassistant:
     container_name: homeassistant
     image: "ghcr.io/home-assistant/home-assistant:stable"
+    devices:
+      # Zigbee / Thread Dongle
+      #- /dev/serial/by-id/usb-SONOFF_SONOFF_Dongle_Lite_MG21_20c5d1d38ba2ef11b644976661ce3355-if00-port0:/dev/ttyUSB0
     volumes:
-      - ${HOMEASSISTANT_DIR_PATH}/config:/config
+      - ${HOMEASSISTANT_DIR_PATH:-./data}/config:/config
       - /etc/localtime:/etc/localtime:ro
+      # Required for Bluetooth via dbus
       - /run/dbus:/run/dbus:ro
     restart: unless-stopped
     privileged: true

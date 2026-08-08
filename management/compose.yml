@@ -1,0 +1,3 @@
+include:
+  - glances.yml
+  - portainer.yml

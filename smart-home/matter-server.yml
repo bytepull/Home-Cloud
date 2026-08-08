@@ -1,5 +1,4 @@
 # More info at https://github.com/matter-js/python-matter-server and https://github.com/matter-js/python-matter-server/blob/main/docs/docker.md
-
 services:
   # python-matter-server
   matter-server:
@@ -13,8 +12,6 @@ services:
       - apparmor:unconfined
     volumes:
       # Create an .env file that sets the USERDIR environment variable.
-      - ${MATTER_SERVER_DIR_PATH:-../volumes/matter-server}/data:/data/
+      - ${MATTER_SERVER_DIR_PATH:-./volumes/matter-server}/data:/data/
       # Required for Bluetooth via D-Bus
       - /run/dbus:/run/dbus:ro
-    # If you adjust command line, make sure to pass the default CMD arguments too:
-    #command: --storage-path /data --paa-root-cert-dir /data/credentials --bluetooth-adapter 0
